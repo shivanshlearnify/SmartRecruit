@@ -8,12 +8,12 @@ import ResumeDataContext from "../../context/ResumeDataContext";
 const ResumeSection = () => {
   const { theme } = useContext(ThemeContext);
   const { resumeData, setResumeData } = useContext(ResumeDataContext);
+  const [dragActive, setDragActive] = useState("false");
 
   useEffect(() => {
     console.log(resumeData);
-    
+
     const storingData = async () => {
-      
       try {
         const fileDataArray = await Promise.all(
           resumeData.map(async (file) => {
@@ -49,6 +49,25 @@ const ResumeSection = () => {
     setResumeData(resumeData.filter((_, i) => i !== index));
   };
 
+  // Handle drag over
+  const handleDragOver = (event) => {
+    event.preventDefault();
+    setDragActive(true);
+  };
+
+  // Handle drag leave
+  const handleDragLeave = () => {
+    setDragActive(false);
+  };
+
+  // Handle file drop
+  const handleDrop = (event) => {
+    event.preventDefault();
+    setDragActive(false);
+    const uploadedFiles = Array.from(event.dataTransfer.files);
+    setResumeData([...resumeData, ...uploadedFiles]);
+  };
+
   return (
     <div
       className={`max-w-lg mx-auto ${
@@ -68,20 +87,23 @@ const ResumeSection = () => {
         Upload your resume
       </h2>
       <div className="p-3 rounded-lg">
-        <label className="block w-full p-3 border border-dashed border-gray-300 rounded-lg text-center cursor-pointer">
+        <label
+          className="block w-full p-3 border border-dashed border-gray-300 rounded-lg text-center cursor-pointer"
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
           <input
             type="file"
             className="hidden"
             onChange={handleUpload}
             multiple
           />
-          <span
-            className={`${theme === "light" ? "text-gray-600" : "text-white"}`}
-          >
-            Click to upload resume
-          </span>
+          <div >
+            <p className="text-gray-600">{dragActive ? "Drop files here..." : "Drag & Drop files "}</p>
+            <p className="bg-black text-white px-2 py-2 rounded-2xl my-3" >Click to Upload</p>
+          </div>
         </label>
-        <DropZone theme={theme} />
 
         <div className="mt-4 space-y-2 flex flex-col gap-1 h-[46vh] overflow-y-auto scrollbar-hide">
           {resumeData?.map((file, index) => (
@@ -106,61 +128,5 @@ const ResumeSection = () => {
     </div>
   );
 };
-const DropZone = ({
-  theme,
-  dragActive,
-  onDragOver,
-  onDragLeave,
-  onDrop,
-  inputFileRef,
-  handleFileChange,
-  removeFileHandler,
-}) => (
-  <div className="h-full w-full flex justify-center items-center">
-    <div
-      className={`flex flex-col h-[20vh] items-center justify-center w-full border-[0.104vw] border-dashed rounded-[0.417vw] ${
-        dragActive ? "border-blue-500" : "border-gray-300"
-      }`}
-      onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
-      onDrop={onDrop}
-    >
-      <p
-        className={`font-bold ${
-          theme === "light" ? "text-gray-600" : "text-white"
-        }`}
-      >
-        Drag & Drop any Document
-      </p>
-      <p
-        className={`text-sm mb-4 ${
-          theme === "light" ? "text-gray-500" : "text-white"
-        }`}
-      >
-        (Support doc, txt file, pdf)
-      </p>
 
-      {/* Hidden input element */}
-      <input
-        ref={inputFileRef}
-        type="file"
-        id="fileInput"
-        className="hidden"
-        onChange={handleFileChange}
-        accept=".doc,.docx,.pdf,application/msword,.txt"
-        multiple
-      />
-
-      {/* Button to trigger file selection */}
-      <button
-        onClick={() => inputFileRef.current.click()}
-        className={`text-white py-2 px-3 cursor-pointer rounded-lg ${
-          theme === "light" ? "bg-black" : "bg-gray-400"
-        }`}
-      >
-        Choose Files
-      </button>
-    </div>
-  </div>
-);
 export default ResumeSection;

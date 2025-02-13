@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { CgAttachment } from "react-icons/cg";
 import { RiRobot2Fill } from "react-icons/ri";
 import { FaUser } from "react-icons/fa";
@@ -9,6 +9,7 @@ import ResumeDataContext from "../../context/ResumeDataContext";
 const ChatBox = () => {
   const { theme } = useContext(ThemeContext);
   const { resumeData, setResumeData } = useContext(ResumeDataContext);
+  const inputRef = useRef();
   const [inputData, setInputData] = useState("");
   const [chatData, setChatData] = useState(() => {
     try {
@@ -25,6 +26,10 @@ const ChatBox = () => {
     localStorage.setItem("chatData", JSON.stringify(chatData));
   }, [chatData]);
 
+  const clearInput = () => {
+    inputRef.current.value = "";
+  };
+
   const handleUpload = (event) => {
     const uploadedFiles = Array.from(event.target.files);
     setResumeData([...resumeData, ...uploadedFiles]);
@@ -36,16 +41,16 @@ const ChatBox = () => {
 
   const data = async () => {
     setChatData((prev) => [...prev, { user: "User", message: inputData }]);
-
+    clearInput();
     const formData = new FormData();
 
     console.log(resumeData);
     resumeData?.forEach((file, index) => {
-      formData.append('files', file);
+      formData.append("files", file);
     });
 
     formData.append("user_input", inputData);
-    
+
     try {
       const response = await fetch(
         "https://2d57-106-219-177-111.ngrok-free.app/resume/ats",
@@ -55,7 +60,7 @@ const ChatBox = () => {
             "ngrok-skip-browser-warning": "69420",
             // "Content-Type": "application/json",
           },
-          body: formData
+          body: formData,
         }
       );
       const json = await response.json();
@@ -104,6 +109,14 @@ const ChatBox = () => {
               type="text"
               placeholder="Type a message..."
               onChange={handleChange}
+              ref={inputRef}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  console.log("enter");
+
+                  data();
+                }
+              }}
               className="flex-1 p-2 border-none outline-none rounded-xl"
             />
             <label className="block cursor-pointer">
@@ -127,7 +140,7 @@ const ChatBox = () => {
           <button
             className="bg-red-500 px-4 py-2 text-white rounded-xl"
             onClick={() => {
-              setChatData([])
+              setChatData([]);
               localStorage.removeItem("chatData");
             }}
           >

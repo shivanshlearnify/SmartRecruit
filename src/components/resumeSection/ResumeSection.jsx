@@ -10,6 +10,8 @@ const ResumeSection = () => {
   const { resumeData, setResumeData } = useContext(ResumeDataContext);
   const [dragActive, setDragActive] = useState("false");
 
+  const isFile = (value) => value instanceof File;
+
   useEffect(() => {
     console.log(resumeData);
 
@@ -17,6 +19,9 @@ const ResumeSection = () => {
       try {
         const fileDataArray = await Promise.all(
           resumeData.map(async (file) => {
+            if(!isFile(file)){
+              return file
+            }
             return new Promise((resolve, reject) => {
               const reader = new FileReader();
               reader.readAsDataURL(file); // Convert file to Base64
@@ -99,9 +104,13 @@ const ResumeSection = () => {
             onChange={handleUpload}
             multiple
           />
-          <div >
-            <p className="text-gray-600">{dragActive ? "Drop files here..." : "Drag & Drop files "}</p>
-            <p className="bg-black text-white px-2 py-2 rounded-2xl my-3" >Click to Upload</p>
+          <div>
+            <p className="text-gray-600">
+              {dragActive ? "Drop files here..." : "Drag & Drop files "}
+            </p>
+            <p className="bg-black text-white px-2 py-2 rounded-2xl my-3">
+              Click to Upload
+            </p>
           </div>
         </label>
 

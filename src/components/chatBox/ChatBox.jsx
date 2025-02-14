@@ -56,7 +56,7 @@ const ChatBox = () => {
 
     try {
       const response = await fetch(
-        "https://abe7-49-206-11-180.ngrok-free.app/resume/ats",
+        "https://b5ab-49-206-8-111.ngrok-free.app/resume/ats",
         {
           method: "POST",
           headers: {
@@ -101,7 +101,9 @@ const ChatBox = () => {
                   {chat.user === "AI" ? <RiRobot2Fill /> : <FaUser />}
                 </h1>
                 <h1 className="bg-gray-400 text-white px-2 py-1 rounded-xl">
-                  {chat.message}
+                  <pre>
+                    {chat.message}
+                    </pre>
                 </h1>
               </div>
             ))}

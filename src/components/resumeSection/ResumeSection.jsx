@@ -4,50 +4,25 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaFile } from "react-icons/fa";
 import ThemeContext from "../../context/ThemeContext";
 import ResumeDataContext from "../../context/ResumeDataContext";
+import { convertFilesToBase64 } from "../../utils/convertFilesToBase64";
 
 const ResumeSection = () => {
   const { theme } = useContext(ThemeContext);
   const { resumeData, setResumeData } = useContext(ResumeDataContext);
   const [dragActive, setDragActive] = useState("false");
 
-  const isFile = (value) => value instanceof File;
-
   useEffect(() => {
     console.log(resumeData);
-
-    const storingData = async () => {
-      try {
-        const fileDataArray = await Promise.all(
-          resumeData.map(async (file) => {
-            if(!isFile(file)){
-              return file
-            }
-            return new Promise((resolve, reject) => {
-              const reader = new FileReader();
-              reader.readAsDataURL(file); // Convert file to Base64
-              reader.onload = () =>
-                resolve({
-                  name: file.name,
-                  type: file.type,
-                  data: reader.result,
-                });
-              reader.onerror = (error) => reject(error);
-            });
-          })
-        );
-
-        localStorage.setItem("resumeData", JSON.stringify(fileDataArray)); // Store in localStorage
-        console.log("Files saved successfully:", fileDataArray);
-      } catch (error) {
-        console.error("Error while saving files:", error);
-      }
-    };
-    storingData();
+    localStorage.setItem("resumeData", JSON.stringify(resumeData)); // Store in localStorage
+    console.log("Files saved successfully:", resumeData);
   }, [resumeData]);
 
-  const handleUpload = (event) => {
+  const handleUpload = async (event) => {
     const uploadedFiles = Array.from(event.target.files);
-    setResumeData([...resumeData, ...uploadedFiles]);
+    const convertedFiles = await convertFilesToBase64(uploadedFiles);
+    console.log(convertedFiles);
+    
+    setResumeData([...resumeData, ...convertedFiles]);
   };
 
   const handleDelete = (index) => {

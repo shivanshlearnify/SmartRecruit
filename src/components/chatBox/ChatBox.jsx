@@ -5,6 +5,7 @@ import { FaUser } from "react-icons/fa";
 
 import ThemeContext from "../../context/ThemeContext";
 import ResumeDataContext from "../../context/ResumeDataContext";
+import { convertBase64ToFiles } from "../../utils/convertBase64ToFiles";
 
 const ChatBox = () => {
   const { theme } = useContext(ThemeContext);
@@ -39,13 +40,15 @@ const ChatBox = () => {
     setInputData(event.target.value);
   };
 
-  const data = async () => {
+  const dataApi = async () => {
     setChatData((prev) => [...prev, { user: "User", message: inputData }]);
     clearInput();
     const formData = new FormData();
 
     console.log(resumeData);
-    resumeData?.forEach((file, index) => {
+    const resumeFilesData = convertBase64ToFiles(resumeData)
+    console.log(resumeFilesData);
+    resumeFilesData?.forEach((file) => {
       formData.append("files", file);
     });
 
@@ -53,7 +56,7 @@ const ChatBox = () => {
 
     try {
       const response = await fetch(
-        "https://2d57-106-219-177-111.ngrok-free.app/resume/ats",
+        "https://abe7-49-206-11-180.ngrok-free.app/resume/ats",
         {
           method: "POST",
           headers: {
@@ -114,7 +117,7 @@ const ChatBox = () => {
                 if (event.key === "Enter") {
                   console.log("enter");
 
-                  data();
+                  dataApi();
                 }
               }}
               className="flex-1 p-2 border-none outline-none rounded-xl"
@@ -132,7 +135,7 @@ const ChatBox = () => {
             </label>
             <button
               className="px-4 py-2 bg-black text-white rounded-xl"
-              onClick={data}
+              onClick={dataApi}
             >
               Send
             </button>

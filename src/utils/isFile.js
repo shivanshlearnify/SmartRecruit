@@ -1,0 +1,1 @@
+export const isFile = (value) => value instanceof File;

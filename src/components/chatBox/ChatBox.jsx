@@ -45,9 +45,7 @@ const ChatBox = () => {
     clearInput();
     const formData = new FormData();
 
-    console.log(resumeData);
-    const resumeFilesData = convertBase64ToFiles(resumeData)
-    console.log(resumeFilesData);
+    const resumeFilesData = convertBase64ToFiles(resumeData);
     resumeFilesData?.forEach((file) => {
       formData.append("files", file);
     });
@@ -56,7 +54,7 @@ const ChatBox = () => {
 
     try {
       const response = await fetch(
-        "https://abe7-49-206-11-180.ngrok-free.app/resume/ats",
+        "https://b5ab-49-206-8-111.ngrok-free.app/resume/ats ",
         {
           method: "POST",
           headers: {
@@ -87,22 +85,29 @@ const ChatBox = () => {
       >
         AI
       </h1>
-      <div className="flex flex-col px-6 h-[85vh] justify-end">
-        <div className="flex flex-col overflow-auto">
+      <div className="flex flex-col px-6 h-[85vh] justify-end items-center">
+        <div className="flex flex-col overflow-auto w-[80%]">
           {chatData &&
             chatData.map((chat, index) => (
               <div
                 key={index}
-                className={`w-fit my-1 flex items-center gap-2 ${
-                  chat.user === "AI" ? "self-start" : "self-end"
+                className={`w-fit my-1 flex items-start gap-2 ${
+                  chat.user === "AI" ? "self-start" : "justify-end"
                 }`}
               >
-                <h1 className="text-2xl border rounded-2xl p-2">
-                  {chat.user === "AI" ? <RiRobot2Fill /> : <FaUser />}
-                </h1>
-                <h1 className="bg-gray-400 text-white px-2 py-1 rounded-xl">
+                {chat.user === "AI" && (
+                  <h1 className="text-2xl border rounded-2xl p-2">
+                    <RiRobot2Fill />
+                  </h1>
+                )}
+                <h1 className={`${chat.user === "AI" ? "bg-gray-400" : "bg-gray-300"} text-white px-2 py-1 rounded-xl w-[80%]`}>
                   {chat.message}
                 </h1>
+                {chat.user === "User" && (
+                  <h1 className="text-2xl border rounded-2xl p-2">
+                    <FaUser />
+                  </h1>
+                )}
               </div>
             ))}
         </div>
@@ -134,14 +139,14 @@ const ChatBox = () => {
               </span>
             </label>
             <button
-              className="px-4 py-2 bg-black text-white rounded-xl"
+              className="px-4 py-2 bg-black text-white rounded-xl cursor-pointer"
               onClick={dataApi}
             >
               Send
             </button>
           </div>
           <button
-            className="bg-red-500 px-4 py-2 text-white rounded-xl"
+            className="bg-red-500 px-4 py-2 text-white rounded-xl cursor-pointer"
             onClick={() => {
               setChatData([]);
               localStorage.removeItem("chatData");

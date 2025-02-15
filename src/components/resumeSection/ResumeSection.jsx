@@ -21,7 +21,7 @@ const ResumeSection = () => {
     const uploadedFiles = Array.from(event.target.files);
     const convertedFiles = await convertFilesToBase64(uploadedFiles);
     console.log(convertedFiles);
-    
+
     setResumeData([...resumeData, ...convertedFiles]);
   };
 
@@ -97,7 +97,11 @@ const ResumeSection = () => {
             >
               <div className="flex gap-2 items-center">
                 <FaFile className="text-black text-xl" />
-                <p className="truncate flex-grow">{file.name}</p>
+                <p className="truncate flex-grow">
+                  {file.name.length < 15
+                    ? file.name
+                    : file.name.slice(0, 15) + "..."}
+                </p>
               </div>
               <button
                 className="text-red-500 hover:text-red-700"

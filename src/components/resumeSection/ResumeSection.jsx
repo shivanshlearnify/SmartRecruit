@@ -50,14 +50,14 @@ const ResumeSection = () => {
 
   return (
     <div
-      className={`max-w-lg mx-auto ${
-        theme === "light" ? "bg-[#fdfdfd]" : " bg-[#2f3233]"
-      } w-[20%] rounded-r-lg`}
+      className={`max-w-[20%] w-[20%] mx-auto ${
+        theme === "light" ? "bg-gray-100" : " bg-[#262626f2]"
+      } rounded-r-xl`}
     >
       <h1
         className={`text-2xl ${
-          theme === "light" ? "bg-[#efefef]" : " bg-[#2f3233]"
-        } rounded-tr-xl py-2 px-2 border-b border-gray-300  ${
+          theme === "light" ? "bg-gray-200" : " bg-neutral-800"
+        } rounded-tr-xl py-2 px-2 font-semibold  ${
           theme === "light" ? "" : "text-white"
         }`}
       >
@@ -68,7 +68,7 @@ const ResumeSection = () => {
       </h2>
       <div className="p-3 rounded-lg">
         <label
-          className="block w-full p-3 border border-dashed border-gray-300 rounded-lg text-center cursor-pointer"
+          className="block w-full p-3 border border-dashed border-gray-500 rounded-lg text-center cursor-pointer"
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
@@ -80,24 +80,24 @@ const ResumeSection = () => {
             multiple
           />
           <div>
-            <p className="text-gray-600">
+            <p className={`${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`}>
               {dragActive ? "Drop files here..." : "Drag & Drop files "}
             </p>
-            <p className="bg-black text-white px-2 py-2 rounded-2xl my-3">
+            <p className="bg-black text-white px-2 py-2 rounded-full mt-5 hover:opacity-[0.7]">
               Click to Upload
             </p>
           </div>
         </label>
 
-        <div className="mt-4 space-y-2 flex flex-col gap-1 h-[46vh] overflow-y-auto scrollbar-hide">
+        <div className="mt-4 space-y-2 flex flex-col gap-0.5 h-[46vh] overflow-y-auto scrollbar-hide">
           {resumeData?.map((file, index) => (
             <div
               key={index}
-              className="flex items-center justify-between p-3 bg-gray-200 rounded-2xl shadow-sm"
+              className={`flex items-center justify-between p-3 rounded-full overflow-hidden ${theme === 'light' ? 'bg-gray-300' : 'bg-neutral-900'}`}
             >
               <div className="flex gap-2 items-center">
-                <FaFile className="text-black text-xl" />
-                <p className="truncate flex-grow">{file.name}</p>
+                <FaFile className={`${theme === 'light' ? 'text-black' : 'text-gray-200'} text-xl`} />
+                <p className={`w-40 not-hover:truncate hover:flex-wrap ${theme === 'light' ? 'text-black' : 'text-gray-200'}`}>{file.name}</p>
               </div>
               <button
                 className="text-red-500 hover:text-red-700"

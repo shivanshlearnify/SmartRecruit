@@ -8,7 +8,7 @@ const NavigationBar = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <div className="h-full w-auto flex flex-col items-start pt-[25px] pb-[25px] p-2 justify-between">
+    <div className="h-full w-auto max-w-[15vw] flex flex-col items-start pt-[25px] pb-[25px] p-2 justify-between">
       <div className="flex items-center">
         {isOpen && (
           <div className="w-[200px] text-2xl text-white">SMART RECRUIT</div>

@@ -41,8 +41,9 @@ const ChatBox = () => {
   };
 
   const dataApi = async () => {
-    setChatData((prev) => [...prev, { user: "User", message: inputData }]);
+    setChatData((prev) => inputData ? [...prev, { user: "User", message: inputData }] : [...prev]);
     clearInput();
+    setInputData('')
     const formData = new FormData();
 
     console.log(resumeData);
@@ -56,7 +57,7 @@ const ChatBox = () => {
 
     try {
       const response = await fetch(
-        "https://b5ab-49-206-8-111.ngrok-free.app/resume/ats",
+        "https://aaf6-106-219-178-92.ngrok-free.app/resume/ats",
         {
           method: "POST",
           headers: {
@@ -66,6 +67,7 @@ const ChatBox = () => {
           body: formData,
         }
       );
+     
       const json = await response.json();
       setChatData((prev) => [...prev, { user: "AI", message: json }]);
     } catch (error) {
@@ -75,20 +77,20 @@ const ChatBox = () => {
   return (
     <div
       className={`w-[80%] ${
-        theme === "light" ? "bg-[#ffffff]" : "bg-[#2f3233]"
-      } shadow-xl border-r-[0.25px] border-r-gray-300 rounded-l-lg`}
+        theme === "light" ? "bg-gray-50" : "bg-[#262626eb]"
+      } shadow-xl rounded-l-xl`}
     >
       <h1
         className={`text-2xl ${
-          theme === "light" ? "bg-[#fefefe]" : " bg-[#2f3233]"
-        } rounded-tl-xl py-2 px-2 border-b-[0.25px] border-gray-300  ${
+          theme === "light" ? "bg-gray-200" : " bg-neutral-800"
+        } rounded-tl-xl py-2 px-2 font-semibold ${
           theme === "light" ? "" : "text-white"
         }`}
       >
         AI
       </h1>
-      <div className="flex flex-col px-6 h-[85vh] justify-end">
-        <div className="flex flex-col overflow-auto">
+      <div className="flex flex-col px-6 h-[89vh] justify-end">
+        <div className="flex flex-col overflow-x-hidden">
           {chatData &&
             chatData.map((chat, index) => (
               <div
@@ -97,22 +99,30 @@ const ChatBox = () => {
                   chat.user === "AI" ? "self-start" : "self-end"
                 }`}
               >
-                <h1 className="text-2xl border rounded-2xl p-2">
-                  {chat.user === "AI" ? <RiRobot2Fill /> : <FaUser />}
-                </h1>
-                <h1 className="bg-gray-400 text-white px-2 py-1 rounded-xl">
-                  <pre>
+                {chat.user === "AI" && (
+                  <h1 className="text-2xl border rounded-full p-2">
+                    <RiRobot2Fill />
+                  </h1>
+                )}
+                <h1 className={`${theme === 'light' ? 'bg-gray-200 text-black' : 'bg-neutral-600 text-white'} px-3 py-2 max-w-[80%] rounded-xl`}>
+                  <pre className="whitespace-pre-wrap break-words">
                     {chat.message}
                     </pre>
                 </h1>
+                {chat.user !== "AI" && (
+                  <h1 className={`text-2xl border rounded-full p-2`}>
+                    <FaUser />
+                  </h1>
+                )}
               </div>
             ))}
         </div>
-        <div className="flex gap-2">
-          <div className="w-[50vw] flex items-center gap-2 p-2 border border-gray-300 rounded-xl shadow-md bg-white mx-auto">
+        <div className="flex gap-2 my-2">
+          <div className={`w-[50vw] flex items-center gap-2 p-2 rounded-full mx-auto ${theme === 'light' ? 'bg-gray-200' : 'bg-neutral-800'}`}>
             <input
               type="text"
               placeholder="Type a message..."
+              className={`${theme === 'light' ? 'text-black' : 'text-white'} flex-1 p-2 border-none outline-none rounded-full`}
               onChange={handleChange}
               ref={inputRef}
               onKeyDown={(event) => {
@@ -122,7 +132,6 @@ const ChatBox = () => {
                   dataApi();
                 }
               }}
-              className="flex-1 p-2 border-none outline-none rounded-xl"
             />
             <label className="block cursor-pointer">
               <input
@@ -131,19 +140,19 @@ const ChatBox = () => {
                 onChange={handleUpload}
                 multiple
               />
-              <span>
-                <CgAttachment className="text-2xl" />
+              <span className={`${theme === 'light' ? '' : 'bg-gray-300 p-10'}`}>
+                <CgAttachment className={`${theme === 'light' ? 'text-black' : 'text-gray-200'} text-2xl`}/>
               </span>
             </label>
             <button
-              className="px-4 py-2 bg-black text-white rounded-xl"
+              className={`px-4 py-2 font-semibold cursor-pointer hover:opacity-[0.75] rounded-full ${theme === 'light' ? 'bg-black text-white' : 'bg-gray-300 text-black'}`}
               onClick={dataApi}
             >
               Send
             </button>
           </div>
           <button
-            className="bg-red-500 px-4 py-2 text-white rounded-xl"
+            className="bg-red-500 px-5 py-1 cursor-pointer hover:bg-red-600 text-white rounded-full font-semibold"
             onClick={() => {
               setChatData([]);
               localStorage.removeItem("chatData");

@@ -77,20 +77,20 @@ const ChatBox = () => {
   return (
     <div
       className={`w-[80%] ${
-        theme === "light" ? "bg-gray-50" : "bg-[#262626eb]"
-      } shadow-xl rounded-l-xl`}
+        theme === "light" ? "" : ""
+      } rounded-l-xl`}
     >
       <h1
         className={`text-2xl ${
-          theme === "light" ? "bg-gray-200" : " bg-neutral-800"
-        } rounded-tl-xl py-2 px-2 font-semibold ${
+          theme === "light" ? "" : ""
+        } rounded-tl-xl py-2 px-2 mx-4 font-semibold ${
           theme === "light" ? "" : "text-white"
         }`}
       >
         AI
       </h1>
-      <div className="flex flex-col px-6 h-[89vh] justify-end">
-        <div className="flex flex-col overflow-x-hidden">
+      <div className="flex flex-col h-[89vh] justify-end">
+        <div className={`${theme === 'light' ? 'bg-[rgba(0,0,0,0.1)]' : 'bg-[rgba(255,255,255,0.05)]'} flex flex-col rounded-xl mx-5 my-1.5 px-[100px] py-[30px] scrollBar overflow-x-hidden`}>
           {chatData &&
             chatData.map((chat, index) => (
               <div
@@ -100,25 +100,26 @@ const ChatBox = () => {
                 }`}
               >
                 {chat.user === "AI" && (
-                  <h1 className="text-2xl border rounded-full p-2">
-                    <RiRobot2Fill />
+                  <h1 className={`text-xs border rounded-full p-1.5 ml-3 ${theme === 'light' ? 'border-black' : 'border-white'}`}>
+                    <RiRobot2Fill  className={`${theme === 'light' ? 'text-black' : 'text-white'}`} />
                   </h1>
                 )}
-                <h1 className={`${theme === 'light' ? 'bg-gray-200 text-black' : 'bg-neutral-600 text-white'} px-3 py-2 max-w-[80%] rounded-xl`}>
-                  <pre className="whitespace-pre-wrap break-words">
+                <h1 className={`${theme === 'light' && chat.user === 'AI' ? 'bg-[rgba(255,255,255,0.5)] text-black' : theme !== 'light' && chat.user === 'AI' ? 'bg-[rgba(0,0,0,0.5)] text-white' : theme === 'light' ? 'text-black' : 'text-white'} ${chat.user === 'AI' ? 'p-[30px] min-w-[80%]' : 'px-3 py-2 !bg-none'}  max-w-[80%] rounded-xl`}>
+                  <pre className="whitespace-pre-wrap break-words font-sans font-normal">
                     {chat.message}
                     </pre>
                 </h1>
                 {chat.user !== "AI" && (
-                  <h1 className={`text-2xl border rounded-full p-2`}>
-                    <FaUser />
+                  <h1 className={`text-xs border rounded-full p-1.5 mr-3  ${theme === 'light' ? 'border-black' : 'border-white'}`}>
+                    <FaUser className={`${theme === 'light' ? 'text-black' : 'text-white'}`} />
                   </h1>
                 )}
               </div>
             ))}
         </div>
-        <div className="flex gap-2 my-2">
-          <div className={`w-[50vw] flex items-center gap-2 p-2 rounded-full mx-auto ${theme === 'light' ? 'bg-gray-200' : 'bg-neutral-800'}`}>
+
+        <div className="flex gap-2 my-2 mx-5 items-center">
+          <div className={`w-full flex items-center gap-2 p-2 rounded-full mx-auto border-1 ${theme === 'light' ? 'border-gray-500' : 'border-gray-400'}`}>
             <input
               type="text"
               placeholder="Type a message..."
@@ -152,7 +153,7 @@ const ChatBox = () => {
             </button>
           </div>
           <button
-            className="bg-red-500 px-5 py-1 cursor-pointer hover:bg-red-600 text-white rounded-full font-semibold"
+            className="bg-red-500 px-2 w-[120px] h-[55px] cursor-pointer hover:bg-red-600 text-white rounded-full font-semibold"
             onClick={() => {
               setChatData([]);
               localStorage.removeItem("chatData");

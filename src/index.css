@@ -7,3 +7,28 @@
   .scrollbar-hide {
     scrollbar-width: 2px;
   }
+
+  .scrollBar::-webkit-scrollbar {
+    width: 0.1953125vw;
+    height: 1vw;
+  }
+  .scrollBar::-webkit-scrollbar-track {
+    margin: 30px;
+  }
+  .scrollBar::-webkit-scrollbar-thumb {
+    width: 0.1953125vw;
+    background-color: #dfdfdf;
+    border-radius: 3.2552083333333335vw;
+  }
+  .scrollBar::-webkit-scrollbar-thumb:hover {
+    background-color: #b2b2b2;
+  }
+
+  .gradient-bg {
+    background: radial-gradient(circle, 
+      #7670c5 0%, 
+      #7f79c9 40%, 
+      #3f4e87 60%, 
+      #1c1c1d 100%);
+  }
+  

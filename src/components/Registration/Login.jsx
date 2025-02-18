@@ -17,8 +17,8 @@ import { showErrorToast } from "../toast/success-toast";
 import { createClient } from "@supabase/supabase-js";
 import { Link, useNavigate } from "react-router";
 
-const supabaseUrl = "https://lieikkuzonvoaelyiooo.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpZWlra3V6b252b2FlbHlpb29vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk3MDI5MTUsImV4cCI6MjA1NTI3ODkxNX0.-ySCjCLvgBr0YzKNq7LdQu-tU8X_boRks3Yfy-aYaHI";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 

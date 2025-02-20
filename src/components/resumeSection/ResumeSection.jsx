@@ -21,7 +21,7 @@ const ResumeSection = () => {
     const uploadedFiles = Array.from(event.target.files);
     const convertedFiles = await convertFilesToBase64(uploadedFiles);
     console.log(convertedFiles);
-    
+
     setResumeData([...resumeData, ...convertedFiles]);
   };
 
@@ -63,9 +63,11 @@ const ResumeSection = () => {
       >
         Resume
       </h1>
-      <div className={`${
-        theme === "light" ? "" : ""
-      } rounded-xl mr-5 mt-1 h-[90%]`}>
+      <div
+        className={`${
+          theme === "light" ? "" : ""
+        } rounded-xl mr-5 mt-1 h-[90%]`}
+      >
         <h2 className={`py-3 px-2 ${theme === "light" ? "" : "text-white"}`}>
           Upload your resume
         </h2>
@@ -83,10 +85,20 @@ const ResumeSection = () => {
               multiple
             />
             <div>
-              <p className={`${theme === 'light' ? 'text-gray-600' : 'text-gray-400'}`}>
+              <p
+                className={`${
+                  theme === "light" ? "text-gray-600" : "text-gray-400"
+                }`}
+              >
                 {dragActive ? "Drop files here..." : "Drag & Drop files "}
               </p>
-              <p className={`${theme === 'light' ? 'bg-black text-white' : 'bg-gray-300 text-black'} px-2 py-2 rounded-full mt-5 hover:opacity-[0.7]`}>
+              <p
+                className={`${
+                  theme === "light"
+                    ? "bg-black text-white"
+                    : "bg-gray-300 text-white"
+                } gradient-btn px-2 py-2 rounded-xl mt-5 hover:opacity-[0.7]`}
+              >
                 Click to Upload
               </p>
             </div>
@@ -96,11 +108,32 @@ const ResumeSection = () => {
             {resumeData?.map((file, index) => (
               <div
                 key={index}
-                className={`flex items-center justify-between p-3 min-h-[50px] rounded-full overflow-hidden ${theme === 'light' ? 'bg-[rgba(0,0,0,0.1)]' : 'bg-[rgba(255,255,255,0.08)]'}`}
+                className={`flex items-center justify-between p-3 min-h-[50px] rounded-xl overflow-hidden ${
+                  theme === "light"
+                    ? "bg-[rgba(0,0,0,0.05)]"
+                    : "bg-[rgba(255,255,255,0.1)]"
+                }`}
               >
                 <div className="flex gap-1 items-center">
-                  <FaFile className={`${theme === 'light' ? 'text-black' : 'text-gray-200'} text-sm`} />
-                  <p className={`w-40 not-hover:truncate hover:flex-wrap ${theme === 'light' ? 'text-black' : 'text-gray-200'}`}>{file.name}</p>
+                  <FaFile
+                    className={`${
+                      theme === "light" ? "text-black" : "text-gray-200"
+                    } text-sm`}
+                  />
+                  <div className="relative group w-40">
+                    <p
+                      className={`truncate ${
+                        theme === "light" ? "text-black" : "text-gray-200"
+                      }`}
+                    >
+                      {file.name}
+                    </p>
+                    <span className={`${
+                        theme === "light" ? "bg-black text-white" : "bg-white text-black"
+                      } fixed right-10 top-[55%] w-max max-w-xs text-md px-4 py-3 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition pointer-events-none z-50 whitespace-nowrap`}>
+                      {file.name}
+                    </span>
+                  </div>
                 </div>
                 <button
                   className="text-red-500 hover:text-red-700"

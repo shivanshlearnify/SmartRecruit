@@ -31,4 +31,46 @@
       #3f4e87 60%, 
       #1c1c1d 100%);
   }
+  .gradient-btn {
+    background: radial-gradient(circle, 
+      #7670c5 0%, 
+      #8f84f0 0%, 
+      #3f4e87 50%, 
+      #1c1c1d 100%);
+  }
+  .gradient-btn2 {
+    background: radial-gradient(circle, 
+      #7670c5 0%, 
+      #8f84f0 30%, 
+      #3f4e87 70%, 
+      #1c1c1d 100%);
+  }
+  .gradient-btnText {
+    background: radial-gradient(circle, 
+      #7670c5 0%, 
+      #8f84f0 30%, 
+      #3f4e87 50%, 
+      #38383c 100%);
+      -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  }
+  .border-gradient {
+    position: relative;
+    padding: 6px;
+    border-radius: 12px;
+    background: radial-gradient(circle, #7670c5 0%, 
+    #8f84f0 0%, 
+    #3f4e87 50%, 
+    #1c1c1d 100%);
+  }
+  
+  .border-gradient::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: white;
+    border-radius: 10px;
+    margin: 2px;
+  }
+  
   

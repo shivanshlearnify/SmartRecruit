@@ -26,6 +26,7 @@ const ChatBox = () => {
 
   useEffect(() => {
     localStorage.setItem("chatData", JSON.stringify(chatData));
+    console.log("message", chatData);
   }, [chatData]);
 
   const clearInput = () => {
@@ -61,18 +62,20 @@ const ChatBox = () => {
 
     try {
       const response = await fetch(
-        "https://aaf6-106-219-178-92.ngrok-free.app/resume/ats",
+        "https://39be-106-219-179-48.ngrok-free.app/resume/ats",
         {
           method: "POST",
           headers: {
             "ngrok-skip-browser-warning": "69420",
             // "Content-Type": "application/json",
+            Authorization: `Bearer ${CookieManager.getCookie("session_id")}`,
           },
           body: formData,
         }
       );
 
       const json = await response.json();
+      console.log("response", typeof json);
       setChatData((prev) => [...prev, { user: "AI", message: json }]);
     } catch (error) {
       console.log(error);
@@ -93,9 +96,13 @@ const ChatBox = () => {
           AI
         </h1>
 
-        <div className={`p-[1px] cursor-pointer hover:opacity-[0.6] gradient-btn2 rounded-xl`}>
+        <div
+          className={`p-[1px] cursor-pointer hover:opacity-[0.6] gradient-btn2 rounded-xl`}
+        >
           <button
-            className={`${theme === 'light' ? 'bg-white' : 'bg-black'} w-[120px] h-[50px] cursor-pointer rounded-xl font-semibold`}
+            className={`${
+              theme === "light" ? "bg-white" : "bg-black"
+            } w-[120px] h-[50px] cursor-pointer rounded-xl font-semibold`}
             onClick={() => {
               setChatData([]);
               localStorage.removeItem("chatData");
@@ -106,9 +113,6 @@ const ChatBox = () => {
             </span>
           </button>
         </div>
-    
-
-       
       </div>
       <div className="flex flex-col h-[85vh] justify-end">
         <div
@@ -139,25 +143,66 @@ const ChatBox = () => {
                     />
                   </h1>
                 )}
-                <h1
+                <div
                   className={`${
-                    theme === "light" && chat.user === "AI"
+                    theme === "light"
                       ? "bg-white text-black"
-                      : theme !== "light" && chat.user === "AI"
-                      ? "bg-black text-white"
-                      : theme === "light"
-                      ? "text-black"
-                      : "text-white"
+                      : "bg-black text-white"
                   } ${
                     chat.user === "AI"
                       ? "p-[15px] min-w-[80%]"
                       : "px-3 py-2 !bg-none"
                   }  max-w-[80%] rounded-xl`}
                 >
-                  <pre className="whitespace-pre-wrap break-words font-sans font-normal">
-                    {chat.message}
-                  </pre>
-                </h1>
+                  {chat.user === "AI" ? (
+                    <>
+                      <p className="mb-4 font-normal">{chat.message.answer}</p>{" "}
+                      {chat.message.table && (
+                        <div className="w-full flex justify-center">
+                          <div className={`${theme === 'light' ? 'border-[rgba(0,0,0,0.06)]': 'border-[rgba(255,255,255,0.1)]'} overflow-hidden rounded-xl border max-w-full min-w-[60%]`}>
+                            <table className="w-full border-collapse">
+                              <thead>
+                                <tr className={`${theme === 'light' ? 'bg-[rgba(0,0,0,0.06)]': 'bg-[rgba(255,255,255,0.1)]'} `}>
+                                  {chat.message?.table?.columns.map(
+                                    (col, index) => (
+                                      <th
+                                        key={index}
+                                        className={`${theme === 'light' ? 'border-[rgba(0,0,0,0.06)]': 'border-[rgba(255,255,255,0.2)]'} border p-3 text-left`}
+                                      >
+                                        {col}
+                                      </th>
+                                    )
+                                  )}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {chat.message?.table?.data.map(
+                                  (row, rowIndex) => (
+                                    <tr
+                                      key={rowIndex}
+                                      className={`${theme === 'light' ? 'hover:bg-[rgba(0,0,0,0.06)]': 'hover:bg-[rgba(255,255,255,0.1)]'} `}
+                                    >
+                                      {row.map((cell, cellIndex) => (
+                                        <td
+                                          key={cellIndex}
+                                          className={`${theme === 'light' ? 'border-[rgba(0,0,0,0.06)]': 'border-[rgba(255,255,255,0.2)]'}  border p-2`}
+                                        >
+                                          {cell}
+                                        </td>
+                                      ))}
+                                    </tr>
+                                  )
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>{chat.message}</>
+                  )}
+                </div>
                 {chat.user !== "AI" && (
                   <h1
                     className={`text-xs border rounded-full p-1.5 mr-3  ${

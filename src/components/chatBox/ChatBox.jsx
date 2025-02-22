@@ -6,6 +6,7 @@ import { FaUser } from "react-icons/fa";
 import ThemeContext from "../../context/ThemeContext";
 import ResumeDataContext from "../../context/ResumeDataContext";
 import { convertBase64ToFiles } from "../../utils/convertBase64ToFiles";
+import { CookieManager } from "../../utils/cookie-manager";
 
 const ChatBox = () => {
   const { theme } = useContext(ThemeContext);
@@ -56,6 +57,7 @@ const ChatBox = () => {
     });
 
     formData.append("user_input", inputData);
+    formData.append("user_token", CookieManager.getCookie("session_id"));
 
     try {
       const response = await fetch(
@@ -148,7 +150,7 @@ const ChatBox = () => {
                       : "text-white"
                   } ${
                     chat.user === "AI"
-                      ? "p-[30px] min-w-[80%]"
+                      ? "p-[15px] min-w-[80%]"
                       : "px-3 py-2 !bg-none"
                   }  max-w-[80%] rounded-xl`}
                 >

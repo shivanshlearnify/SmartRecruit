@@ -15,6 +15,7 @@ import {
 } from "react-router";
 import LoginPage from "./pages/LoginPage";
 import { CookieManager } from "./utils/cookie-manager";
+import { ChatProvider } from "./context/ChatContext";
 
 function App() {
   const [theme, setTheme] = useState("light");
@@ -39,22 +40,16 @@ function App() {
     <Provider store={store}>
       <ResumeDataContext.Provider value={{ resumeData, setResumeData }}>
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
-          <Router>
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <Navigate to="/register" replace />
-                }
-              />
-              <Route
-                path="/login"
-                element={<LoginPage />}
-              />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/home" element={<Homepage />} />
-            </Routes>
-          </Router>
+          <ChatProvider>
+            <Router>
+              <Routes>
+                <Route path="/" element={<Navigate to="/register" replace />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/home" element={<Homepage />} />
+              </Routes>
+            </Router>
+          </ChatProvider>
         </ThemeContext.Provider>
       </ResumeDataContext.Provider>
     </Provider>

@@ -7,27 +7,22 @@ import ThemeContext from "../../context/ThemeContext";
 import ResumeDataContext from "../../context/ResumeDataContext";
 import { convertBase64ToFiles } from "../../utils/convertBase64ToFiles";
 import { CookieManager } from "../../utils/cookie-manager";
+import ChatContext from "../../context/ChatContext";
 
 const ChatBox = () => {
   const { theme } = useContext(ThemeContext);
   const { resumeData, setResumeData } = useContext(ResumeDataContext);
   const inputRef = useRef();
-  const userEmail = CookieManager.getCookie('user_email');
+  const userEmail = CookieManager.getCookie("user_email");
+  const { chatData, setChatData, activeChatId, createNewChat } =
+    useContext(ChatContext);
   const [inputData, setInputData] = useState("");
-  const [chatData, setChatData] = useState(() => {
-    try {
-      const savedChats = localStorage.getItem(`chatData_${userEmail}`);
-
-      return savedChats ? JSON.parse(savedChats) : [];
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  });
+  const scrollToViewRef = useRef();
 
   useEffect(() => {
-    localStorage.setItem(`chatData_${userEmail}`, JSON.stringify(chatData));
-    console.log("message", chatData);
+    if (scrollToViewRef.current) {
+      scrollToViewRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }, [chatData]);
 
   const clearInput = () => {
@@ -44,9 +39,15 @@ const ChatBox = () => {
   };
 
   const dataApi = async () => {
-    setChatData((prev) =>
-      inputData ? [...prev, { user: "User", message: inputData }] : [...prev]
-    );
+    if (!inputData.trim() || !activeChatId) return;
+
+    setChatData((prev) => ({
+      ...prev,
+      [activeChatId]: [
+        ...(prev[activeChatId] || []),
+        { user: "User", message: inputData },
+      ],
+    }));
     clearInput();
     setInputData("");
     const formData = new FormData();
@@ -77,7 +78,10 @@ const ChatBox = () => {
 
       const json = await response.json();
       console.log("response", typeof json);
-      setChatData((prev) => [...prev, { user: "AI", message: json }]);
+      setChatData((prev) => ({
+        ...prev,
+        [activeChatId]: [...prev[activeChatId], { user: "AI", message: json }],
+      }));
     } catch (error) {
       console.log(error);
     }
@@ -104,10 +108,7 @@ const ChatBox = () => {
             className={`${
               theme === "light" ? "bg-white" : "bg-black"
             } w-[120px] h-[50px] cursor-pointer rounded-xl font-semibold`}
-            onClick={() => {
-              setChatData([]);
-              localStorage.removeItem("chatData");
-            }}
+            onClick={createNewChat}
           >
             <span className="gradient-btnText text-transparent bg-clip-text text-lg">
               New Chat
@@ -123,12 +124,12 @@ const ChatBox = () => {
               : "bg-[rgba(255,255,255,0.1)]"
           } flex flex-col rounded-xl mx-5 my-1.5 px-[100px] py-[30px] h-full scrollBar overflow-x-hidden`}
         >
-          {chatData &&
-            chatData.map((chat, index) => (
+          {activeChatId && chatData[activeChatId] ? (
+            chatData[activeChatId].map((chat, index) => (
               <div
                 key={index}
-                className={`w-fit my-1 flex items-center gap-2 ${
-                  chat.user === "AI" ? "self-start" : "self-end"
+                className={`w-full my-1 flex items-center gap-2 ${
+                  chat.user === "AI" ? "justify-start" : "justify-end"
                 }`}
               >
                 {chat.user === "AI" && (
@@ -150,27 +151,74 @@ const ChatBox = () => {
                       ? "bg-white text-black"
                       : "bg-black text-white"
                   } ${
-                    chat.user === "AI"
-                      ? "p-[15px] min-w-[80%]"
-                      : "px-3 py-2 !bg-none"
+                    chat.user === "AI" ? "p-[15px] min-w-[80%]" : "px-3 py-2"
                   }  max-w-[80%] rounded-xl`}
                 >
                   {chat.user === "AI" ? (
                     <>
-                      <p className="mb-4 font-normal">{chat.message.answer}</p>{" "}
+                      <p
+                        className={`mb-4 font-normal break-words whitespace-pre-wrap w-full max-w-full ${
+                          index === chatData[activeChatId].length - 1
+                            ? "reveal"
+                            : ""
+                        }`}
+                      >
+                        {chat.message.answer
+                          .split("")
+                          .map((char, charIndex) => (
+                            <span
+                              key={charIndex}
+                              style={{ "--char-index": charIndex }}
+                            >
+                              {char}
+                            </span>
+                          ))}
+                      </p>{" "}
                       {chat.message.table && (
                         <div className="w-full flex justify-center">
-                          <div className={`${theme === 'light' ? 'border-[rgba(0,0,0,0.06)]': 'border-[rgba(255,255,255,0.1)]'} overflow-hidden rounded-xl border max-w-full min-w-[60%]`}>
+                          <div
+                            className={`${
+                              theme === "light"
+                                ? "border-[rgba(0,0,0,0.06)]"
+                                : "border-[rgba(255,255,255,0.1)]"
+                            } overflow-hidden rounded-xl border max-w-full min-w-[60%]`}
+                          >
                             <table className="w-full border-collapse">
                               <thead>
-                                <tr className={`${theme === 'light' ? 'bg-[rgba(0,0,0,0.06)]': 'bg-[rgba(255,255,255,0.1)]'} `}>
+                                <tr
+                                  className={`${
+                                    theme === "light"
+                                      ? "bg-[rgba(0,0,0,0.06)]"
+                                      : "bg-[rgba(255,255,255,0.1)]"
+                                  } `}
+                                >
                                   {chat.message?.table?.columns.map(
                                     (col, index) => (
                                       <th
                                         key={index}
-                                        className={`${theme === 'light' ? 'border-[rgba(0,0,0,0.06)]': 'border-[rgba(255,255,255,0.2)]'} border p-3 text-left`}
+                                        className={`${
+                                          theme === "light"
+                                            ? "border-[rgba(0,0,0,0.06)]"
+                                            : "border-[rgba(255,255,255,0.2)]"
+                                        } border p-3 text-left break-words whitespace-pre-wrap w-full max-w-full ${
+                                          index ===
+                                          chatData[activeChatId].length - 1
+                                            ? "reveal"
+                                            : ""
+                                        }`}
                                       >
-                                        {col}
+                                        {col
+                                          .split("")
+                                          .map((char, charIndex) => (
+                                            <span
+                                              key={charIndex}
+                                              style={{
+                                                "--char-index": charIndex,
+                                              }}
+                                            >
+                                              {char}
+                                            </span>
+                                          ))}
                                       </th>
                                     )
                                   )}
@@ -181,14 +229,38 @@ const ChatBox = () => {
                                   (row, rowIndex) => (
                                     <tr
                                       key={rowIndex}
-                                      className={`${theme === 'light' ? 'hover:bg-[rgba(0,0,0,0.06)]': 'hover:bg-[rgba(255,255,255,0.1)]'} `}
+                                      className={`${
+                                        theme === "light"
+                                          ? "hover:bg-[rgba(0,0,0,0.06)]"
+                                          : "hover:bg-[rgba(255,255,255,0.1)]"
+                                      } `}
                                     >
                                       {row.map((cell, cellIndex) => (
                                         <td
                                           key={cellIndex}
-                                          className={`${theme === 'light' ? 'border-[rgba(0,0,0,0.06)]': 'border-[rgba(255,255,255,0.2)]'}  border p-2`}
+                                          className={`${
+                                            theme === "light"
+                                              ? "border-[rgba(0,0,0,0.06)]"
+                                              : "border-[rgba(255,255,255,0.2)]"
+                                          }  border p-2 break-words whitespace-pre-wrap w-full max-w-full ${
+                                          index ===
+                                          chatData[activeChatId].length - 1
+                                            ? "reveal"
+                                            : ""
+                                        }`}
                                         >
-                                          {cell}
+                                          {cell
+                                            .split("")
+                                            .map((char, charIndex) => (
+                                              <span
+                                                key={charIndex}
+                                                style={{
+                                                  "--char-index": charIndex,
+                                                }}
+                                              >
+                                                {char}
+                                              </span>
+                                            ))}
                                         </td>
                                       ))}
                                     </tr>
@@ -201,7 +273,9 @@ const ChatBox = () => {
                       )}
                     </>
                   ) : (
-                    <>{chat.message}</>
+                    <div className="break-words">
+                      {chat.message}
+                    </div>
                   )}
                 </div>
                 {chat.user !== "AI" && (
@@ -218,7 +292,11 @@ const ChatBox = () => {
                   </h1>
                 )}
               </div>
-            ))}
+            ))
+          ) : (
+            <p className="text-center text-gray-500">Start a new chat!</p>
+          )}
+          <div ref={scrollToViewRef}></div>
         </div>
 
         <div className="flex gap-2 my-2 mx-5 items-center">

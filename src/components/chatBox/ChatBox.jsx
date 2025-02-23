@@ -12,10 +12,11 @@ const ChatBox = () => {
   const { theme } = useContext(ThemeContext);
   const { resumeData, setResumeData } = useContext(ResumeDataContext);
   const inputRef = useRef();
+  const userEmail = CookieManager.getCookie('user_email');
   const [inputData, setInputData] = useState("");
   const [chatData, setChatData] = useState(() => {
     try {
-      const savedChats = localStorage.getItem("chatData");
+      const savedChats = localStorage.getItem(`chatData_${userEmail}`);
 
       return savedChats ? JSON.parse(savedChats) : [];
     } catch (error) {
@@ -25,7 +26,7 @@ const ChatBox = () => {
   });
 
   useEffect(() => {
-    localStorage.setItem("chatData", JSON.stringify(chatData));
+    localStorage.setItem(`chatData_${userEmail}`, JSON.stringify(chatData));
     console.log("message", chatData);
   }, [chatData]);
 

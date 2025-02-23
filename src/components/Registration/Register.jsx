@@ -60,10 +60,10 @@ const Register = () => {
   };
 
   return (
-    <div className="w-[100%] h-[100vh] bg-stone-400 px-25 py-15">
-      <div className="w-full h-full bg-gray-200 flex justify-between items-center rounded-xl gap-[2vw] py-[2vw] px-[4vw]">
-        <div className="min-w-[50%]">
-          <img className="w-full h-[500px] rounded-xl" src="/public/images/register-page-abstract-element.jpg" alt="Kayzen" />
+    <div className="w-[100%] h-[100vh] bg-stone-400 px-2 py-2">
+      <div className="w-full h-full bg-gray-200 flex justify-between items-center rounded-xl gap-[2vw] py-[4vw] px-[4vw]">
+        <div className="min-w-[50%] h-full">
+          <img className="w-full h-full rounded-xl" src="/public/images/register-page-abstract-element.jpg" alt="Kayzen" />
         </div>
 
         <div className="w-[50%] flex-col items-center">

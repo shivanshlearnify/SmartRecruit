@@ -25,6 +25,7 @@ const NavigationBar = () => {
       showErrorToast(error.message)
     } else {
       showSuccessToast("Logged Out!");
+      localStorage.removeItem("chatData");
       CookieManager.deleteCookie("session_id");
       navigate('/', {replace: true})
     }

@@ -50,67 +50,100 @@ const ResumeSection = () => {
 
   return (
     <div
-      className={`max-w-lg mx-auto ${
-        theme === "light" ? "bg-[#fdfdfd]" : " bg-[#2f3233]"
-      } w-[20%] rounded-r-lg`}
+      className={`max-w-[20%] w-[20%] h-full mx-auto ${
+        theme === "light" ? "" : ""
+      } rounded-r-xl border-none outline-none overflow-hidden`}
     >
       <h1
         className={`text-2xl ${
-          theme === "light" ? "bg-[#efefef]" : " bg-[#2f3233]"
-        } rounded-tr-xl py-2 px-2 border-b border-gray-300  ${
+          theme === "light" ? "" : ""
+        } rounded-tr-xl py-2 px-2 font-semibold  ${
           theme === "light" ? "" : "text-white"
         }`}
       >
         Resume
       </h1>
-      <h2 className={`py-3 px-2 ${theme === "light" ? "" : "text-white"}`}>
-        Upload your resume
-      </h2>
-      <div className="p-3 rounded-lg">
-        <label
-          className="block w-full p-3 border border-dashed border-gray-300 rounded-lg text-center cursor-pointer"
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
-          <input
-            type="file"
-            className="hidden"
-            onChange={handleUpload}
-            multiple
-          />
-          <div>
-            <p className="text-gray-600">
-              {dragActive ? "Drop files here..." : "Drag & Drop files "}
-            </p>
-            <p className="bg-black text-white px-2 py-2 rounded-2xl my-3">
-              Click to Upload
-            </p>
-          </div>
-        </label>
-
-        <div className="mt-4 space-y-2 flex flex-col gap-1 h-[46vh] overflow-y-auto scrollbar-hide">
-          {resumeData?.map((file, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between p-3 bg-gray-200 rounded-2xl shadow-sm"
-            >
-              <div className="flex gap-2 items-center">
-                <FaFile className="text-black text-xl" />
-                <p className="truncate flex-grow">
-                  {file.name.length < 15
-                    ? file.name
-                    : file.name.slice(0, 15) + "..."}
-                </p>
-              </div>
-              <button
-                className="text-red-500 hover:text-red-700"
-                onClick={() => handleDelete(index)}
+      <div
+        className={`${
+          theme === "light" ? "" : ""
+        } rounded-xl mr-5 mt-1 h-[90%]`}
+      >
+        <h2 className={`py-3 px-2 ${theme === "light" ? "" : "text-white"}`}>
+          Upload your resume
+        </h2>
+        <div className="p-3 rounded-lg">
+          <label
+            className="block w-full p-3 border border-dashed border-gray-500 rounded-lg text-center cursor-pointer"
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <input
+              type="file"
+              className="hidden"
+              onChange={handleUpload}
+              multiple
+            />
+            <div>
+              <p
+                className={`${
+                  theme === "light" ? "text-gray-600" : "text-gray-400"
+                }`}
               >
-                <RiDeleteBin6Line className="w-6 h-6 cursor-pointer" />
-              </button>
+                {dragActive ? "Drop files here..." : "Drag & Drop files "}
+              </p>
+              <p
+                className={`${
+                  theme === "light"
+                    ? "bg-black text-white"
+                    : "bg-gray-300 text-white"
+                } gradient-btn px-2 py-2 rounded-xl mt-5 hover:opacity-[0.7]`}
+              >
+                Click to Upload
+              </p>
             </div>
-          ))}
+          </label>
+
+          <div className="mt-6 space-y-1.5 flex flex-col gap-[1px] max-h-[400px] overflow-y-scroll scrollbar-hide">
+            {resumeData?.map((file, index) => (
+              <div
+                key={index}
+                className={`flex items-center justify-between p-3 min-h-[50px] rounded-xl overflow-hidden ${
+                  theme === "light"
+                    ? "bg-[rgba(0,0,0,0.05)]"
+                    : "bg-[rgba(255,255,255,0.1)]"
+                }`}
+              >
+                <div className="flex gap-1 items-center">
+                  <FaFile
+                    className={`${
+                      theme === "light" ? "text-black" : "text-gray-200"
+                    } text-sm`}
+                  />
+                  <div className="relative group w-40">
+                    <p
+                      className={`truncate ${
+                        theme === "light" ? "text-black" : "text-gray-200"
+                      }`}
+                    >
+                      {file.name}
+                    </p>
+                    <span className={`${
+                        theme === "light" ? "bg-black text-white" : "bg-white text-black"
+                      } fixed right-10 top-[55%] w-max max-w-xs text-md px-4 py-3 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition pointer-events-none z-50 whitespace-nowrap`}>
+                      {file.name}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  className="text-red-500 hover:text-red-700"
+                  onClick={() => handleDelete(index)}
+                >
+                  <RiDeleteBin6Line className="w-4 h-4 cursor-pointer" />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

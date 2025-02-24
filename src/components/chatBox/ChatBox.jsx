@@ -64,7 +64,7 @@ const ChatBox = () => {
 
     try {
       const response = await fetch(
-        "https://39be-106-219-179-48.ngrok-free.app/resume/ats",
+        "https://ffc5-49-206-9-189.ngrok-free.app/resume/ats",
         {
           method: "POST",
           headers: {
@@ -349,7 +349,7 @@ const ChatBox = () => {
               Send
             </button>
           </div>
-          <button
+          {/* <button
             className="bg-red-500 px-4 py-2 text-white rounded-xl"
             onClick={() => {
               setChatData([]);
@@ -357,7 +357,7 @@ const ChatBox = () => {
             }}
           >
             Clear Chat
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

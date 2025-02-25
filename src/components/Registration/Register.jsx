@@ -3,16 +3,21 @@ import React, { useEffect, useState } from "react";
 //import { FaUser, FaLock } from "react-icons/fa";
 //import { MdEmail } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setUsername,
-  setEmail,
-  setPassword,
-} from "../../../store/actions/RegisterUserAction";
+// import {
+//   setUsername,
+//   setEmail,
+//   setPassword,
+// } from "../../../store/actions/RegisterUserAction";
 //import { getApiConfig, getApiHeaders } from '@/utility/api-config';
 import { CookieManager } from "../../utils/cookie-manager";
 import { showErrorToast, showSuccessToast } from "../toast/success-toast";
 import { createClient } from "@supabase/supabase-js";
 import { Link, useNavigate } from "react-router";
+import {
+  setUsername,
+  setEmail,
+  setPassword,
+} from "../../../store/reducers/registerUserSlice";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
@@ -27,10 +32,10 @@ const Register = () => {
   const validateForm = () => {
     //const emailRegex = /^[a-zA-Z0-9._%+-]+@smartitframe\.com$/;
     //if (!emailRegex.test(email)) {
-      //showErrorToast(
-       // "Invalid email! Only '@smartitframe.com' domain is allowed."
-      //);
-      //return false;
+    //showErrorToast(
+    // "Invalid email! Only '@smartitframe.com' domain is allowed."
+    //);
+    //return false;
     //}
     if (password.length < 6) {
       showErrorToast("Password must be at least 6 characters long.");
@@ -63,7 +68,11 @@ const Register = () => {
     <div className="w-[100%] h-[100vh] bg-stone-400 px-2 py-2">
       <div className="w-full h-full bg-gray-200 flex justify-between items-center rounded-xl gap-[2vw] py-[4vw] px-[4vw]">
         <div className="min-w-[50%] h-full">
-          <img className="w-full h-full rounded-xl" src="/public/images/register-page-abstract-element.jpg" alt="Kayzen" />
+          <img
+            className="w-full h-full rounded-xl"
+            src="/public/images/register-page-abstract-element.jpg"
+            alt="Kayzen"
+          />
         </div>
 
         <div className="w-[50%] flex-col items-center">

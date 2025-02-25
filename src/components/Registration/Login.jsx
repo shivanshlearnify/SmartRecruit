@@ -5,17 +5,18 @@ import React from "react";
 //import { FaLock } from "react-icons/fa";
 //import { MdEmail } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setEmail,
-  setPassword,
-  setShowLogin,
-  setFadeIn,
-} from "../../../store/actions/RegisterUserAction";
+// import {
+//   setEmail,
+//   setPassword,
+//   setShowLogin,
+//   setFadeIn,
+// } from "../../../store/actions/RegisterUserAction";
 //import { useRouter } from "next/navigation";
 import { CookieManager } from "../../utils/cookie-manager";
 import { showErrorToast } from "../toast/success-toast";
 import { createClient } from "@supabase/supabase-js";
 import { Link, useNavigate } from "react-router";
+import { setEmail, setPassword } from "../../../store/reducers/registerUserSlice";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
